@@ -1,0 +1,7 @@
+layout {
+	pane
+	pane size=1 borderless=true {
+		command "bash"
+		args "-c" "cargo build && zellij action start-or-reload-plugin file:target/wasm32-wasi/debug/minimal-tab-bar.wasm"
+	}
+}
