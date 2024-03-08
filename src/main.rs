@@ -11,7 +11,7 @@ struct Plugin {
 register_plugin!(Plugin);
 
 impl ZellijPlugin for Plugin {
-    fn load(&mut self, configuration: BTreeMap<String, String>) {
+    fn load(&mut self, _: BTreeMap<String, String>) {
         request_permission(&[PermissionType::ReadApplicationState]);
         subscribe(&[EventType::ModeUpdate, EventType::TabUpdate]);
     }
