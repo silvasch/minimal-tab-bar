@@ -1,6 +1,0 @@
-layout {
-	pane
-	pane size=1 borderless=true {
-		plugin location="file:/home/silva/Developement/minimal-tab-bar/target/wasm32-wasi/debug/minimal-tab-bar.wasm"
-	}
-}
