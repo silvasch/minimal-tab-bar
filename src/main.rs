@@ -37,14 +37,17 @@ impl ZellijPlugin for Plugin {
     fn render(&mut self, _: usize, cols: usize) {
         let mut tabs = String::new();
         for tab in &self.tabs {
-            tabs.push(' ');
+            tabs.push_str("  ");
             tabs.push_str(&tab.name);
             if tab.active {
                 tabs.push('*');
+            } else {
+                tabs.push(' ');
             }
             tabs.push_str(" |");
         }
         if tabs.len() >= 2 {
+            tabs.pop();
             tabs.pop();
             tabs.pop();
         }
