@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use ansi_term::{Color, Style};
+use ansi_term::{unstyled_len, ANSIString, ANSIStrings, Color, Style};
 use zellij_tile::prelude::*;
 
 #[derive(Default)]
@@ -34,7 +34,11 @@ impl ZellijPlugin for Plugin {
     }
 
     fn render(&mut self, _: usize, cols: usize) {
-        let mut tab_strings = vec![];
+        if cols == 0 {
+            return;
+        }
+
+        let mut tab_strings: Vec<ANSIString> = vec![];
 
         for tab in &self.tabs {
             let style = if tab.active {
@@ -43,24 +47,26 @@ impl ZellijPlugin for Plugin {
                 Style::new()
             };
 
-            tab_strings.push(style.paint(&tab.name));
+            tab_strings.push(style.paint(format!(" {} ", tab.name)));
         }
-        let mut tabs = String::new();
-        for tab_string in &tab_strings {
-            tabs.push_str(&format!(" {} ", tab_string));
-        }
+
+        let tab_string = ANSIStrings(&tab_strings);
 
         let mode = format!("{:?} ", self.mode).to_uppercase();
 
-        let tabs_section_length = tabs.len();
         let mode_section_length = mode.len();
+        dbg!(&mode_section_length);
+        let tabs_section_length = unstyled_len(&tab_string);
+        dbg!(&tabs_section_length);
+
+        dbg!(&cols);
 
         let mut spacer = String::new();
         for _ in 0..cols - tabs_section_length - mode_section_length {
             spacer.push(' ');
         }
 
-        print!("{}{}{}", tabs, spacer, mode);
+        print!("{}{}{}", tab_string, spacer, mode);
     }
 }
 
