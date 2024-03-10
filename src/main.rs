@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use ansi_term::{Color, Style};
 use zellij_tile::prelude::*;
 
 #[derive(Default)]
@@ -7,8 +8,6 @@ struct Plugin {
     tabs: Vec<TabInfo>,
     mode: InputMode,
 }
-
-register_plugin!(Plugin);
 
 impl ZellijPlugin for Plugin {
     fn load(&mut self, _: BTreeMap<String, String>) {
@@ -35,20 +34,20 @@ impl ZellijPlugin for Plugin {
     }
 
     fn render(&mut self, _: usize, cols: usize) {
-        let mut tabs = String::new();
+        let mut tab_strings = vec![];
+
         for tab in &self.tabs {
-            tabs.push_str("  ");
-            tabs.push_str(&tab.name);
-            if tab.active {
-                tabs.push('*');
+            let style = if tab.active {
+                Style::new().bold().on(Color::Green)
             } else {
-                tabs.push(' ');
-            }
-            tabs.push_str(" |");
+                Style::new()
+            };
+
+            tab_strings.push(style.paint(&tab.name));
         }
-        if tabs.len() >= 2 {
-            tabs.pop();
-            tabs.pop();
+        let mut tabs = String::new();
+        for tab_string in &tab_strings {
+            tabs.push_str(&format!(" {} ", tab_string));
         }
 
         let mode = format!("{:?} ", self.mode).to_uppercase();
@@ -64,3 +63,5 @@ impl ZellijPlugin for Plugin {
         print!("{}{}{}", tabs, spacer, mode);
     }
 }
+
+register_plugin!(Plugin);
