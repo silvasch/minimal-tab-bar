@@ -49,7 +49,6 @@ impl ZellijPlugin for Plugin {
         if tabs.len() >= 2 {
             tabs.pop();
             tabs.pop();
-            tabs.pop();
         }
 
         let mode = format!("{:?} ", self.mode).to_uppercase();
